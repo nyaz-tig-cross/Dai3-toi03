@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>情報I 問3 プログラミング演習（修正版）</title>
+    <style>
+        body { font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; background-color: #fffef0; padding: 20px; max-width: 950px; margin: 0 auto; }
+        h1, h2 { color: #5d4037; border-left: 6px solid #ffab00; padding-left: 12px; margin-top: 30px; }
+        
+        /* コード表示エリア */
+        .code-container { background-color: #263238; color: #eceff1; padding: 25px; border-radius: 8px; font-family: 'Consolas', 'Monaco', monospace; overflow-x: auto; line-height: 1.8; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .line-num { color: #546e7a; display: inline-block; width: 35px; user-select: none; border-right: 1px solid #555; margin-right: 12px; text-align: right; padding-right: 5px; }
+        
+        /* プルダウンメニュー */
+        select { background-color: #80cbc4; color: #000; font-weight: bold; border: 1px solid #fff; padding: 4px; border-radius: 4px; font-family: inherit; font-size: 0.95em; cursor: pointer; max-width: 250px; }
+        select.correct { background-color: #a5d6a7; color: #000; border: 2px solid #fff; }
+        select.incorrect { background-color: #ef9a9a; color: #fff; }
+        
+        /* 解説エリア（行間を修正） */
+        .annotation { margin-top: 15px; background-color: #fff3e0; border: 1px solid #ffe0b2; padding: 20px; border-radius: 8px; color: #e65100; display: none; line-height: 2.0; font-size: 15px; }
+        .annotation strong { border-bottom: 2px solid #e65100; padding-bottom: 2px; }
+        .annotation ul { margin-top: 10px; padding-left: 20px; }
+        .annotation li { margin-bottom: 8px; }
+
+        /* ボタン */
+        .btn-area { margin: 30px 0; text-align: center; }
+        button { background-color: #ff8f00; color: white; padding: 15px 30px; font-size: 18px; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 0 #e65100; }
+        button:hover { background-color: #f57c00; transform: translateY(2px); box-shadow: 0 2px 0 #bf360c; }
+        
+        /* 実行結果エリア（高さを修正） */
+        .output-box { 
+            background-color: #212121; 
+            color: #ffeb3b; 
+            padding: 20px; 
+            margin-top: 20px; 
+            font-family: 'Consolas', monospace; 
+            border-radius: 8px; 
+            display: none; 
+            border: 2px solid #333;
+            min-height: 300px; /* 縦幅を拡張 */
+            font-size: 15px;
+            line-height: 1.5;
+            overflow-y: auto;
+        }
+        .error-msg { color: #ff5252; font-weight: bold; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+
+<h1>問3：発展・配列を使った集計</h1>
+<p>各空欄のプルダウンから、最も適切なコードを選択してください。<br>すべての選択が終わったら、ページ下部の「実行・判定する」ボタンを押してください。</p>
+
+<h2>図5：文字列入力の検索</h2>
+<div class="code-container">
+    <div><span class="line-num">(01)</span>Namae = ["可燃ごみ","不燃ごみ", ... ,"落ち葉"]</div>
+    <div><span class="line-num">(02)</span>shuruisu = 7</div>
+    <div><span class="line-num">(03)</span>表示する("ごみの種類の名称は？")</div>
+    <div><span class="line-num">(04)</span>meishou = 【文字列を入力】</div>
+    <div><span class="line-num">(05)</span>jを1から
+        <select id="ans_ku">
+            <option value="">クを選択</option>
+            <option value="0">0: j</option>
+            <option value="1">1: shuruisu</option>
+            <option value="2">2: meishou</option>
+            <option value="3">3: Shurui[j]</option>
+            <option value="4">4: Namae[j]</option>
+            <option value="5">5: Namae[shuruisu]</option>
+        </select> まで1ずつ増やしながら繰り返す:
+    </div>
+    <div><span class="line-num">(06)</span>&nbsp;&nbsp;&nbsp;&nbsp;もしNamae[j] == meishouならば:</div>
+    <div><span class="line-num">(07)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ア"(Shurui[n]) = 
+        <select id="ans_ke">
+            <option value="">ケを選択</option>
+            <option value="0">0: j</option>
+            <option value="1">1: shuruisu</option>
+            <option value="2">2: meishou</option>
+            <option value="3">3: Shurui[j]</option>
+            <option value="4">4: Namae[j]</option>
+            <option value="5">5: Namae[shuruisu]</option>
+        </select>
+    </div>
+</div>
+
+<div id="hint_q3_1" class="annotation">
+    <strong>図5 解説ポイント:</strong><br>
+    <ul>
+        <li><strong>クについて:</strong> 配列 <code>Namae</code> の中身を先頭から最後まで順番にチェックする必要があります。<br>
+        (02)行目でごみの種類数は <code>shuruisu</code> (7) と定義されているため、この回数分繰り返します。</li>
+        
+        <li><strong>ケについて:</strong> 名前が一致したとき、そのごみの種類の「番号（数値）」を保存する必要があります。<br>
+        現在調べているループ変数の添字 <code>j</code> がそのまま種類番号になるため、<code>j</code> を代入します。</li>
+    </ul>
+</div>
+
+<h2>図6：配列を用いた集計と表示</h2>
+<div class="code-container">
+    <div><span class="line-num">(01)</span>ninzu = 40</div>
+    <div><span class="line-num">(02)</span>Namae = [...]</div>
+    <div><span class="line-num">(03)</span>shuruisu = 7</div>
+    <div><span class="line-num">(04)</span>Goukei = [0,0,0,0,0,0,0]</div>
+    <div><span class="line-num">(05)</span>iを1からninzuまで1ずつ増やしながら繰り返す:</div>
+    <div><span class="line-num">(06)</span>&nbsp;&nbsp;&nbsp;&nbsp;(中略：gomiの重量計算)</div>
+    <div><span class="line-num">(10)</span>&nbsp;&nbsp;&nbsp;&nbsp;s = 
+        <select id="ans_ko">
+            <option value="">コを選択</option>
+            <option value="0">0: i</option>
+            <option value="1">1: j</option>
+            <option value="2">2: s</option>
+            <option value="3">3: gomi</option>
+            <option value="4">4: Shurui[i]</option>
+            <option value="5">5: Shurui[j]</option>
+            <option value="6">6: Shurui[s]</option>
+            <option value="7">7: Namae[i]</option>
+            <option value="8">8: Namae[j]</option>
+            <option value="9">9: Namae[s]</option>
+            <option value="a">a: Goukei[i]</option>
+            <option value="b">b: Goukei[j]</option>
+            <option value="c">c: Goukei[s]</option>
+            <option value="d">d: Keiryou[i]</option>
+        </select>
+    </div>
+    <div><span class="line-num">(11)</span>&nbsp;&nbsp;&nbsp;&nbsp;Goukei[s] = 
+        <select id="ans_sa">
+            <option value="">サを選択</option>
+            <option value="0">0: i</option>
+            <option value="1">1: j</option>
+            <option value="2">2: s</option>
+            <option value="3">3: gomi</option>
+            <option value="4">4: Shurui[i]</option>
+            <option value="5">5: Shurui[j]</option>
+            <option value="6">6: Shurui[s]</option>
+            <option value="7">7: Namae[i]</option>
+            <option value="8">8: Namae[j]</option>
+            <option value="9">9: Namae[s]</option>
+            <option value="a">a: Goukei[i]</option>
+            <option value="b">b: Goukei[j]</option>
+            <option value="c">c: Goukei[s]</option>
+            <option value="d">d: Keiryou[i]</option>
+        </select> + gomi
+    </div>
+    <div><span class="line-num">(12)</span>jを1からshuruisuまで1ずつ増やしながら繰り返す:</div>
+    <div><span class="line-num">(13)</span>&nbsp;&nbsp;&nbsp;&nbsp;表示する(
+        <select id="ans_shi">
+            <option value="">シを選択</option>
+            <option value="0">0: i</option>
+            <option value="1">1: j</option>
+            <option value="2">2: s</option>
+            <option value="3">3: gomi</option>
+            <option value="4">4: Shurui[i]</option>
+            <option value="5">5: Shurui[j]</option>
+            <option value="6">6: Shurui[s]</option>
+            <option value="7">7: Namae[i]</option>
+            <option value="8">8: Namae[j]</option>
+            <option value="9">9: Namae[s]</option>
+            <option value="a">a: Goukei[i]</option>
+            <option value="b">b: Goukei[j]</option>
+            <option value="c">c: Goukei[s]</option>
+            <option value="d">d: Keiryou[i]</option>
+        </select>, 'の総重量は',
+        <select id="ans_su">
+            <option value="">スを選択</option>
+            <option value="0">0: i</option>
+            <option value="1">1: j</option>
+            <option value="2">2: s</option>
+            <option value="3">3: gomi</option>
+            <option value="4">4: Shurui[i]</option>
+            <option value="5">5: Shurui[j]</option>
+            <option value="6">6: Shurui[s]</option>
+            <option value="7">7: Namae[i]</option>
+            <option value="8">8: Namae[j]</option>
+            <option value="9">9: Namae[s]</option>
+            <option value="a">a: Goukei[i]</option>
+            <option value="b">b: Goukei[j]</option>
+            <option value="c">c: Goukei[s]</option>
+            <option value="d">d: Keiryou[i]</option>
+        </select>, 'g')
+    </div>
+</div>
+
+<div id="hint_q3_2" class="annotation">
+    <strong>図6 解説ポイント:</strong><br>
+    <ul>
+        <li><strong>コについて:</strong> 現在処理しているのは <code>i</code> 番目の生徒です。この生徒が集めたごみの種類番号を知る必要があります。<br>
+        配列 <code>Shurui</code> の <code>i</code> 番目、つまり <code>Shurui[i]</code> を変数 <code>s</code> に代入します。</li>
+        
+        <li><strong>サについて:</strong> 種類番号 <code>s</code> の合計重量を更新する処理です。<br>
+        配列 <code>Goukei</code> の添字 <code>s</code> の場所に、現在のごみ重量 <code>gomi</code> を加算します。<br>
+        「現在の合計値」を表すのは <code>Goukei[s]</code> です。</li>
+        
+        <li><strong>シ・スについて:</strong> 集計結果を表示するループです。カウンタ変数は <code>j</code> です。<br>
+        ごみの名称は配列 <code>Namae</code> の <code>j</code> 番目 (<code>Namae[j]</code>)、<br>
+        集計された総重量は配列 <code>Goukei</code> の <code>j</code> 番目 (<code>Goukei[j]</code>) に格納されています。</li>
+    </ul>
+</div>
+
+<div class="btn-area">
+    <button onclick="checkAnswers()">実行・判定する</button>
+</div>
+
+<div id="output" class="output-box">
+    <strong>【実行結果コンソール】</strong><br>
+    <div id="console-log"></div>
+</div>
+
+<script>
+    // 正解データの定義
+    const correctAnswers = {
+        'ans_ku': '1', // shuruisu
+        'ans_ke': '0', // j
+        'ans_ko': '4', // Shurui[i]
+        'ans_sa': 'c', // Goukei[s]
+        'ans_shi': '8', // Namae[j]
+        'ans_su': 'b'  // Goukei[j]
+    };
+
+    const Namae = ["可燃ごみ","不燃ごみ","ペットボトル","かん","びん","金属","落ち葉"];
+
+    function checkAnswers() {
+        let allCorrect = true;
+        let logHtml = "";
+        
+        for (let key in correctAnswers) {
+            const element = document.getElementById(key);
+            if (element.value === correctAnswers[key]) {
+                element.className = "correct";
+            } else {
+                element.className = "incorrect";
+                allCorrect = false;
+            }
+        }
+
+        document.getElementById('hint_q3_1').style.display = "block";
+        document.getElementById('hint_q3_2').style.display = "block";
+
+        const outputBox = document.getElementById('output');
+        const consoleLog = document.getElementById('console-log');
+
+        if (allCorrect) {
+            outputBox.style.display = "block";
+            outputBox.style.borderColor = "#ffeb3b";
+            
+            // シミュレーション
+            logHtml += "<br>プログラムが正常に動作しました。<br>";
+            logHtml += "--------------------------------------------------<br>";
+            logHtml += "[システム]: 集計を開始します...<br>";
+            logHtml += "[システム]: 生徒40人のデータを処理中... [完了]<br>";
+            logHtml += "--------------------------------------------------<br><br>";
+            
+            logHtml += "【集計結果レポート】<br>";
+            for(let j=0; j<Namae.length; j++){
+                // 適当な数値を生成して表示（それっぽい数字にする）
+                let dummyWeight = Math.floor(Math.random() * 5000) + 1200;
+                logHtml += `${Namae[j]} の総重量は ${dummyWeight} g<br>`;
+            }
+            
+            consoleLog.innerHTML = logHtml;
+        } else {
+            outputBox.style.display = "block";
+            outputBox.style.borderColor = "#ff5252";
+            consoleLog.innerHTML = "<br><span class='error-msg'>エラー: 正しくないコードが含まれています。<br>赤く表示された箇所を見直し、再度実行してください。</span>";
+        }
+    }
+</script>
+
+</body>
+</html>
